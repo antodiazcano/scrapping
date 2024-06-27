@@ -6,11 +6,36 @@ from src.utils import wait
 
 
 class IdsScrapping:
+    """
+    Class to get all house ids of a particular zone. Each zone has many pages and many
+    advertisements per page.
+    """
+
     def __init__(self, base_url: str) -> None:
+        """
+        Constructor of the class.
+
+        Parameters
+        ----------
+        base_url : Url of the advertisements of the zone
+        """
+
         self.browser = uc.Chrome()
         self.base_url = base_url
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
+        """
+        Gets the html of the current page of the zone.
+
+        Parameters
+        ----------
+        page : Number of the page
+
+        Returns
+        -------
+        html of the current page
+        """
+
         url = f"{self.base_url}/pagina-{page}.htm"
         self.browser.get(url)
         wait()
@@ -26,6 +51,14 @@ class IdsScrapping:
         return BeautifulSoup(html, "lxml")
 
     def obtain_ids(self) -> list[int]:
+        """
+        Obtains all the house ids of a zone.
+
+        Returns
+        -------
+        ids : List with all ids of the zone
+        """
+
         current_page = 1
         ids = []
 
@@ -44,6 +77,7 @@ class IdsScrapping:
                     "article"
                 )
             else:  # we reach the end
+                self.browser.quit()
                 return ids
 
             current_page += 1
