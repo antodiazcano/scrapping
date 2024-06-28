@@ -427,7 +427,7 @@ class HouseScrapping:
         except IndexError:
             return None
 
-    def get_house_information(self) -> dict:
+    def get_house_information(self) -> dict[str, int | str | bool | None]:
         """
         Summarises all the information of the house.
 
