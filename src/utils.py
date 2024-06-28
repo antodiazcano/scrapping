@@ -3,4 +3,4 @@ import numpy as np
 
 
 def wait() -> None:
-    time.sleep(np.max([np.random.uniform(1, 1.5), np.random.normal(3, 1.5)]))
+    time.sleep(np.max([np.random.uniform(0.75, 1.5), np.random.normal(2, 1.5)]))
