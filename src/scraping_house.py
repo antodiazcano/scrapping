@@ -1,42 +1,21 @@
 import re
 import numpy as np
 from bs4 import BeautifulSoup
-import undetected_chromedriver as uc
-from selenium.common.exceptions import NoSuchElementException
-
-from src.utils import wait
 
 # pip install lxml
 
 
-class HouseScrapping:
-    """
-    Given the url of the advertisement of a house this class extracts all relevant
-    information.
-    """
-
-    def __init__(self, url: str) -> None:
+class HouseScraping:
+    def __init__(self, soup: BeautifulSoup) -> None:
         """
         Constructor of the class.
 
         Parameters
         ----------
-        url : Url of the advertisement
+        soup : Soup
         """
 
-        self.url = url
-        browser = uc.Chrome()
-        browser.get(url)
-        wait()
-        try:  # disagree with cookies
-            browser.find_element(
-                "xpath", "//*[@id='didomi-notice-disagree-button']"
-            ).click()
-        except NoSuchElementException:
-            pass
-        html = browser.page_source
-        self.soup = BeautifulSoup(html, "lxml")
-        browser.quit()
+        self.soup = soup
 
     def _get_title(self) -> str:
         """
@@ -128,9 +107,9 @@ class HouseScrapping:
 
         return None
 
-    def _get_description(self) -> str:
+    def _get_description(self) -> str | None:
         """
-        Gets the descriotion of the advertisement.
+        Gets the description of the advertisement.
         """
 
         try:
@@ -144,18 +123,21 @@ class HouseScrapping:
                 .text.replace("\n", ""),
             )
         except AttributeError:
-            return re.sub(
-                r"\s+",
-                " ",
-                self.soup.find(
-                    "div",
-                    {
-                        "class": "adCommentsLanguage expandable is-expandable with-expander-button"
-                    },
+            try:
+                return re.sub(
+                    r"\s+",
+                    " ",
+                    self.soup.find(
+                        "div",
+                        {
+                            "class": "adCommentsLanguage expandable is-expandable with-expander-button"
+                        },
+                    )
+                    .find("p")
+                    .text.replace("\n", ""),
                 )
-                .find("p")
-                .text.replace("\n", ""),
-            )
+            except AttributeError:
+                return None
 
     def _get_number_of_photos(self) -> int:
         """

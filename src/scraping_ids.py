@@ -5,7 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 from src.utils import wait
 
 
-class IdsScrapping:
+class IdsScraping:
     """
     Class to get all house ids of a particular zone. Each zone has many pages and many
     advertisements per page.
@@ -20,8 +20,8 @@ class IdsScrapping:
         base_url : Url of the advertisements of the zone
         """
 
-        self.browser = uc.Chrome()
         self.base_url = base_url
+        self.browser = uc.Chrome()
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
         """
@@ -48,6 +48,7 @@ class IdsScrapping:
             pass
 
         html = self.browser.page_source
+
         return BeautifulSoup(html, "lxml")
 
     def obtain_ids(self) -> list[int]:
@@ -60,7 +61,7 @@ class IdsScrapping:
         """
 
         current_page = 1
-        ids = []
+        ids: list[int] = []
 
         while True:
             soup = self._get_new_soup(current_page)
@@ -80,10 +81,10 @@ class IdsScrapping:
                 self.browser.quit()
                 return ids
 
-            current_page += 1
-
             for article in articles:
                 id_ = article.get("data-element-id")
                 if id_ is not None:
                     ids.append(int(id_))
-                wait()
+
+            current_page += 1
+            wait()
