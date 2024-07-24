@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import undetected_chromedriver as uc
+import undetected_chromedriver as uc  # pip install --upgrade undetected-chromedriver
 from selenium.common.exceptions import NoSuchElementException
 
 from src.utils import wait
@@ -20,10 +20,8 @@ class IdsScraping:
         base_url : Url of the advertisements of the zone
         """
 
-        print("Empezamos")
         self.base_url = base_url
         self.browser = uc.Chrome()
-        print("Ok")
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
         """
