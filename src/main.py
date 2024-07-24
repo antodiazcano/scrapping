@@ -8,6 +8,10 @@ from src.scraping_house import HouseScraping
 from src.utils import wait
 
 
+IDS_PATH = "data/house_ids.csv"
+HOUSES_PATH = "data/houses_df.csv"
+
+
 def _save_df(house_dfs: list[pd.DataFrame]) -> None:
     """
     Saves the list of dfs to a unified df.
@@ -20,7 +24,7 @@ def _save_df(house_dfs: list[pd.DataFrame]) -> None:
     df = pd.DataFrame(house_dfs)
     cols = ["id"] + [col for col in df.columns if col != "id"]
     df = df[cols]
-    df.to_csv("data/houses_df.csv", index=False)
+    df.to_csv(HOUSES_PATH, index=False)
 
 
 def _get_soup(browser: uc.Chrome, url: str) -> BeautifulSoup:
@@ -66,7 +70,7 @@ def main(base_url: str, save_every: int = 5) -> None:
     obtainer = IdsScraping(base_url)
     house_ids = obtainer.obtain_ids()
     house_ids_df = pd.DataFrame({"house_id": house_ids})
-    house_ids_df.to_csv("data/house_ids.csv", index=False)
+    house_ids_df.to_csv(IDS_PATH, index=False)
 
     browser = uc.Chrome()
 
@@ -74,8 +78,8 @@ def main(base_url: str, save_every: int = 5) -> None:
     house_dfs: list[pd.DataFrame] = []
     for i, house_id in enumerate(house_ids):
         # Save progress
-        if i % save_every == 0:
-            print(f"Number of scraped id's: {i}")
+        if i % save_every == 0 and i > 0:
+            print(f"Number of scraped id's: {i}/{len(house_dfs)}")
             _save_df(house_dfs)
 
         # get house url

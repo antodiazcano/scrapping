@@ -139,41 +139,22 @@ class HouseScraping:
             except AttributeError:
                 return None
 
-    def _get_number_of_photos(self) -> int:
+    def _get_number_of_photos(self) -> int | None:
         """
         Gets the number of photos of the advertisement.
         """
 
-        photos_horizontal = self.soup.find_all(
-            "div",
-            {
-                "class": "placeholder-multimedia image overlay-box horizontal printable mb-small"
-            },
-        )
-        photos_vertical = self.soup.find_all(
-            "div",
-            {
-                "class": "placeholder-multimedia image overlay-box vertical printable mb-small"
-            },
-        )
-        hidden_photos_horizontal = self.soup.find_all(
-            "div",
-            {"class": "placeholder-multimedia image overlay-box horizontal mb-small"},
-        )
-        hidden_photos_vertical = self.soup.find_all(
-            "div",
-            {"class": "placeholder-multimedia image overlay-box vertical mb-small"},
-        )
-
-        photos = (
-            photos_horizontal
-            + photos_vertical
-            + hidden_photos_horizontal
-            + hidden_photos_vertical
-        )
-        photos = [str(photo) for photo in photos if "plano" not in str(photo).lower()]
-
-        return len(photos)
+        try:
+            try:
+                return int(
+                    self.soup.find(
+                        "span", {"class": "multimedia-shortcuts-button-text"}
+                    ).text.split()[0]
+                )
+            except AttributeError:
+                return None
+        except ValueError:
+            return None
 
     def _get_number_of_rooms(self) -> int | None:
         """

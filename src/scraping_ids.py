@@ -20,8 +20,10 @@ class IdsScraping:
         base_url : Url of the advertisements of the zone
         """
 
+        print("Empezamos")
         self.base_url = base_url
         self.browser = uc.Chrome()
+        print("Ok")
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
         """
