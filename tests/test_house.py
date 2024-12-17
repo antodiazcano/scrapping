@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from src.scraping_house import HouseScraping
 
 
-with open("data/house.html", "r", encoding="utf-8") as f:
+with open("data/tests/house.html", "r", encoding="utf-8") as f:
     html = f.read()
 soup = BeautifulSoup(html, "html.parser")
 scraper = HouseScraping(soup)
@@ -22,7 +22,7 @@ def test_title() -> None:
 
     result = scraper._get_title()
     expected = "Piso en venta en calle Reino Unido"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=2)
@@ -33,7 +33,7 @@ def test_type() -> None:
 
     result = scraper._get_type()
     expected = "flat"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=3)
@@ -44,7 +44,7 @@ def test_location() -> None:
 
     result = scraper._get_location()
     expected = "Buenavista-Valparaíso-La Legua, Toledo"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=4)
@@ -55,7 +55,7 @@ def test_price() -> None:
 
     result = scraper._get_price()
     expected = 304900
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=5)
@@ -66,7 +66,7 @@ def test_m2() -> None:
 
     result = scraper._get_m2()
     expected = 120
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=6)
@@ -77,7 +77,7 @@ def test_status() -> None:
 
     result = scraper._get_status()
     expected = "Segunda mano/buen estado"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=7)
@@ -88,7 +88,7 @@ def test_floor() -> None:
 
     result = scraper._get_floor()
     expected = 1
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=8)
@@ -99,10 +99,10 @@ def test_description() -> None:
 
     result = scraper._get_description()
     length = 1155
-    assert isinstance(result, str), f"Expcted str, got {type(result)}"
+    assert isinstance(result, str), f"Expcted str, got {type(result)}."
     assert (
         len(result) == length
-    ), f"Expected str with length {length}, got str with length {len(result)}"
+    ), f"Expected str with length {length}, got str with length {len(result)}."
 
 
 @pytest.mark.run(order=9)
@@ -113,7 +113,7 @@ def test_n_photos() -> None:
 
     result = scraper._get_number_of_photos()
     expected = 41
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=10)
@@ -124,7 +124,7 @@ def test_n_rooms() -> None:
 
     result = scraper._get_number_of_rooms()
     expected = 3
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=11)
@@ -135,7 +135,7 @@ def test_n_bathrooms() -> None:
 
     result = scraper._get_number_of_bathrooms()
     expected = 2
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=12)
@@ -146,7 +146,7 @@ def test_particular() -> None:
 
     result = scraper._get_particular()
     expected = False
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=13)
@@ -157,7 +157,7 @@ def test_luxury() -> None:
 
     result = scraper._get_luxury()
     expected = False
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=14)
@@ -168,7 +168,7 @@ def test_video() -> None:
 
     result = scraper._get_video()
     expected = False
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=15)
@@ -179,7 +179,7 @@ def test_virtual_tour() -> None:
 
     result = scraper._get_virtual_tour()
     expected = True
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=16)
@@ -190,7 +190,7 @@ def test_3d_tour() -> None:
 
     result = scraper._get_3d_tour()
     expected = False
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=17)
@@ -201,7 +201,7 @@ def test_homestaging() -> None:
 
     result = scraper._get_homestaging()
     expected = True
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=18)
@@ -212,7 +212,7 @@ def test_plane() -> None:
 
     result = scraper._get_plane()
     expected = True
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=19)
@@ -223,7 +223,7 @@ def test_air_conditioning() -> None:
 
     result = scraper._get_air_conditioning()
     expected = True
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=20)
@@ -234,7 +234,7 @@ def test_heating() -> None:
 
     result = scraper._get_heating()
     expected = "Calefacción individual: Gas natural"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=21)
@@ -245,7 +245,7 @@ def test_elevator() -> None:
 
     result = scraper._get_elevator()
     expected = True
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=22)
@@ -255,7 +255,7 @@ def test_furnished() -> None:
     """
 
     result = scraper._get_furnished()
-    assert result is None, f"Expected None, got {result}"
+    assert result is None, f"Expected None, got {result}."
 
 
 @pytest.mark.run(order=23)
@@ -265,7 +265,7 @@ def test_terrace() -> None:
     """
 
     result = scraper._get_terrace()
-    assert result is None, f"Expected None, got {result}"
+    assert result is None, f"Expected None, got {result}."
 
 
 @pytest.mark.run(order=24)
@@ -276,7 +276,7 @@ def test_consume() -> None:
 
     result = scraper._get_consume()
     expected = "D"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=25)
@@ -287,7 +287,7 @@ def test_emisions() -> None:
 
     result = scraper._get_emisions()
     expected = "D"
-    assert result == expected, f"Expected {expected}, got {result}"
+    assert result == expected, f"Expected {expected}, got {result}."
 
 
 @pytest.mark.run(order=26)
@@ -298,7 +298,7 @@ def test_get_house_info() -> None:
 
     result = scraper.get_house_information()
     expected = 25
-    assert len(result) == expected, f"Expected length {expected}, got {len(result)}"
+    assert len(result) == expected, f"Expected length {expected}, got {len(result)}."
 
 
 @pytest.mark.run(order=27)
@@ -310,4 +310,4 @@ def test_get_html() -> None:
     result = scraper.get_html()
     assert isinstance(
         result, BeautifulSoup
-    ), f"Expected type BeautifoulSoup, got {type(result)}"
+    ), f"Expected type BeautifoulSoup, got {type(result)}."

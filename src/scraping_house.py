@@ -26,6 +26,10 @@ class HouseScraping:
     def _get_title(self) -> str:
         """
         Gets the title of the advertisement.
+
+        Returns
+        -------
+        Title of the advertisement.
         """
 
         return re.sub(
@@ -39,6 +43,10 @@ class HouseScraping:
     def _get_type(self) -> str:
         """
         Gets the type of the house.
+
+        Returns
+        -------
+        Flat or house.
         """
 
         if "piso" in re.sub(
@@ -55,6 +63,10 @@ class HouseScraping:
     def _get_location(self) -> str:
         """
         Gets the location of the house.
+
+        Returns
+        -------
+        Location of the house.
         """
 
         return re.sub(
@@ -66,6 +78,10 @@ class HouseScraping:
     def _get_price(self) -> int:
         """
         Gets the price of the house.
+
+        Returns
+        -------
+        Price of the house.
         """
 
         return int(self.soup.find("span", {"class": "txt-bold"}).text.replace(".", ""))
@@ -73,6 +89,10 @@ class HouseScraping:
     def _get_m2(self) -> int | None:
         """
         Gets the m2 of the house.
+
+        Returns
+        -------
+        The m2 of the house.
         """
 
         for characteristic in self.soup.find(
@@ -89,6 +109,10 @@ class HouseScraping:
     def _get_status(self) -> str | None:
         """
         Gets the status of the house (new, used...).
+
+        Returns
+        -------
+        Status of the house.
         """
 
         for characteristic in self.soup.find(
@@ -99,8 +123,14 @@ class HouseScraping:
 
         return None
 
-    def _get_floor(self) -> str | None:
-        """ """
+    def _get_floor(self) -> int | None:
+        """
+        Gets the floor of the flat. If it is a house the floor is None.
+
+        Returns
+        -------
+        Floor of the flat.
+        """
 
         for characteristic in self.soup.find(
             "div", {"class": "details-property-feature-one"}
@@ -117,6 +147,10 @@ class HouseScraping:
     def _get_description(self) -> str | None:
         """
         Gets the description of the advertisement.
+
+        Returns
+        -------
+        Description of the advertisement.
         """
 
         try:
@@ -150,6 +184,10 @@ class HouseScraping:
     def _get_number_of_photos(self) -> int | None:
         """
         Gets the number of photos of the advertisement.
+
+        Returns
+        -------
+        Number of photos.
         """
 
         try:
@@ -167,6 +205,10 @@ class HouseScraping:
     def _get_number_of_rooms(self) -> int | None:
         """
         Gets the number of rooms of the house.
+
+        Returns
+        -------
+        Number of rooms.
         """
 
         for characteristic in self.soup.find(
@@ -182,6 +224,10 @@ class HouseScraping:
     def _get_number_of_bathrooms(self) -> int | None:
         """
         Gets the number of bathrooms of the house.
+
+        Returns
+        -------
+        Number of bathrooms.
         """
 
         for characteristic in self.soup.find(
@@ -197,6 +243,10 @@ class HouseScraping:
     def _get_particular(self) -> bool:
         """
         Gets if the advertisement is of a particular or a company.
+
+        Returns
+        -------
+        Particular or company.
         """
 
         return "particular" in self.soup.find("div", {"class": "name"}).text.lower()
@@ -204,6 +254,10 @@ class HouseScraping:
     def _get_luxury(self) -> bool:
         """
         Gets if the house is of luxury.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         try:
@@ -218,6 +272,10 @@ class HouseScraping:
     def _get_video(self) -> bool:
         """
         Gets it the advertisement has a video.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         try:
@@ -232,6 +290,10 @@ class HouseScraping:
     def _get_virtual_tour(self) -> bool:
         """
         Gets if the advertisement has a virtual tour.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         button_str = "multimedia-shortcuts-button btn icon-virtual-tour-outline"
@@ -248,6 +310,10 @@ class HouseScraping:
     def _get_3d_tour(self) -> bool:
         """
         Gets if the advertisement has a 3d tour.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         try:
@@ -262,6 +328,10 @@ class HouseScraping:
     def _get_homestaging(self) -> bool:
         """
         Gets if the advertisement has a homestaging.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         try:
@@ -272,6 +342,10 @@ class HouseScraping:
     def _get_plane(self) -> bool:
         """
         Gets if the advertisement has a plane of the house.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         try:
@@ -287,6 +361,10 @@ class HouseScraping:
     def _get_air_conditioning(self) -> bool:
         """
         Gets if the house has air conditioning.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         characteristics = [
@@ -313,6 +391,10 @@ class HouseScraping:
     def _get_heating(self) -> str | None:
         """
         Gets if the house has heating.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         for characteristic in self.soup.find(
@@ -326,6 +408,10 @@ class HouseScraping:
     def _get_elevator(self) -> bool | None:
         """
         Gets if the house has an elevator.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         for characteristic in self.soup.find(
@@ -341,6 +427,10 @@ class HouseScraping:
     def _get_furnished(self) -> bool | None:
         """
         Gets if the house is furnished.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         for characteristic in self.soup.find(
@@ -356,6 +446,10 @@ class HouseScraping:
     def _get_terrace(self) -> str | None:
         """
         Gets if the house has terrace.
+
+        Returns
+        -------
+        Boolean indicator.
         """
 
         for characteristic in self.soup.find(
@@ -372,6 +466,10 @@ class HouseScraping:
     def _get_consume(self) -> str | None:
         """
         Gets the energetic consume of the house.
+
+        Returns
+        -------
+        Class consume ("A", "B", "C", "D", "E", "F" or "G").
         """
 
         for letter in ["A", "B", "C", "D", "E", "F", "G"]:
@@ -385,6 +483,10 @@ class HouseScraping:
     def _get_emisions(self) -> str | None:
         """
         Gets the emissions of the house.
+
+        Returns
+        -------
+        Class emisions ("A", "B", "C", "D", "E", "F" or "G").
         """
 
         for letter in ["A", "B", "C", "D", "E", "F", "G"]:

@@ -3,9 +3,10 @@ Script for scraping houses of a particular zone.
 """
 
 from bs4 import BeautifulSoup
-import requests
+import undetected_chromedriver as uc
+from selenium.common.exceptions import NoSuchElementException
 
-from src.utils import wait, MAX_TIME_REQUEST
+from src.utils import wait
 
 
 class IdsScraping:
@@ -24,6 +25,7 @@ class IdsScraping:
         """
 
         self.base_url = base_url
+        self.browser = uc.Chrome()
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
         """
@@ -35,13 +37,46 @@ class IdsScraping:
 
         Returns
         -------
-        html of the current page.
+        Html of the current page.
         """
 
         url = f"{self.base_url}/pagina-{page}.htm"
-        html = requests.get(url, timeout=MAX_TIME_REQUEST)
+        self.browser.get(url)
+        wait()
 
-        return BeautifulSoup(html.text, "html.parser")
+        try:
+            self.browser.find_element(
+                "xpath", "//*[@id='didomi-notice-disagree-button']"
+            ).click()
+        except NoSuchElementException:
+            pass
+
+        html = self.browser.page_source
+
+        return BeautifulSoup(html, "lxml")
+
+    def _add_ids(self, ids: list[int], soup: BeautifulSoup) -> list[int]:
+        """
+        Updates the list of ids with the ones in the current page.
+
+        Parameters
+        ----------
+        ids  : Current ids.
+        soup : Soup of the new page.
+
+        Returns
+        -------
+        Updated ids.
+        """
+
+        articles = soup.find("main", {"class": "listing-items"}).find_all("article")
+
+        for article in articles:
+            id_ = article.get("data-element-id")
+            if id_ is not None:
+                ids.append(int(id_))
+
+        return ids
 
     def obtain_ids(self) -> list[int]:
         """
@@ -57,7 +92,6 @@ class IdsScraping:
 
         while True:
             soup = self._get_new_soup(current_page)
-
             new_current_page = int(
                 soup.find("main", {"class": "listing-items"})
                 .find("div", {"class": "pagination"})
@@ -66,16 +100,10 @@ class IdsScraping:
             )
 
             if new_current_page == current_page:
-                articles = soup.find("main", {"class": "listing-items"}).find_all(
-                    "article"
-                )
+                ids = self._add_ids(ids, soup)
             else:  # we reach the end
+                self.browser.quit()
                 return ids
-
-            for article in articles:
-                id_ = article.get("data-element-id")
-                if id_ is not None:
-                    ids.append(int(id_))
 
             current_page += 1
             wait()
