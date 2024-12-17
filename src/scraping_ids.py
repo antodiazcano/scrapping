@@ -1,8 +1,11 @@
-from bs4 import BeautifulSoup
-import undetected_chromedriver as uc  # pip install --upgrade undetected-chromedriver
-from selenium.common.exceptions import NoSuchElementException
+"""
+Script for scraping houses of a particular zone.
+"""
 
-from src.utils import wait
+from bs4 import BeautifulSoup
+import requests
+
+from src.utils import wait, MAX_TIME_REQUEST
 
 
 class IdsScraping:
@@ -17,11 +20,10 @@ class IdsScraping:
 
         Parameters
         ----------
-        base_url : Url of the advertisements of the zone
+        base_url : Url of the advertisements of the zone.
         """
 
         self.base_url = base_url
-        self.browser = uc.Chrome()
 
     def _get_new_soup(self, page: int) -> BeautifulSoup:
         """
@@ -29,27 +31,17 @@ class IdsScraping:
 
         Parameters
         ----------
-        page : Number of the page
+        page : Number of the page.
 
         Returns
         -------
-        html of the current page
+        html of the current page.
         """
 
         url = f"{self.base_url}/pagina-{page}.htm"
-        self.browser.get(url)
-        wait()
+        html = requests.get(url, timeout=MAX_TIME_REQUEST)
 
-        try:
-            self.browser.find_element(
-                "xpath", "//*[@id='didomi-notice-disagree-button']"
-            ).click()
-        except NoSuchElementException:
-            pass
-
-        html = self.browser.page_source
-
-        return BeautifulSoup(html, "lxml")
+        return BeautifulSoup(html.text, "html.parser")
 
     def obtain_ids(self) -> list[int]:
         """
@@ -57,7 +49,7 @@ class IdsScraping:
 
         Returns
         -------
-        ids : List with all ids of the zone
+        List with all ids of the zone.
         """
 
         current_page = 1
@@ -78,7 +70,6 @@ class IdsScraping:
                     "article"
                 )
             else:  # we reach the end
-                self.browser.quit()
                 return ids
 
             for article in articles:
@@ -88,3 +79,14 @@ class IdsScraping:
 
             current_page += 1
             wait()
+
+    def get_url(self) -> str:
+        """
+        Returns the url.
+
+        Returns
+        -------
+        Base url used.
+        """
+
+        return self.base_url

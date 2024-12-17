@@ -1,18 +1,24 @@
+"""
+Script for scraping the information of a house.
+"""
+
 import re
 import numpy as np
 from bs4 import BeautifulSoup
 
-# pip install lxml
-
 
 class HouseScraping:
+    """
+    Class to obtain the information of a house given its advertisement.
+    """
+
     def __init__(self, soup: BeautifulSoup) -> None:
         """
         Constructor of the class.
 
         Parameters
         ----------
-        soup : Soup
+        soup : Soup.
         """
 
         self.soup = soup
@@ -54,9 +60,7 @@ class HouseScraping:
         return re.sub(
             r"\s+",
             " ",
-            self.soup.find("span", {"class": "main-info__title-minor"}).text.split(",")[
-                0
-            ],
+            self.soup.find("span", {"class": "main-info__title-minor"}).text,
         )
 
     def _get_price(self) -> int:
@@ -78,8 +82,7 @@ class HouseScraping:
                 words = characteristic.text.split(" ")
                 if "útiles" in characteristic.text:
                     return int(words[-3].replace(".", ""))
-                else:
-                    return int(words[0].replace(".", ""))
+                return int(words[0].replace(".", ""))
 
         return None
 
@@ -102,8 +105,12 @@ class HouseScraping:
         for characteristic in self.soup.find(
             "div", {"class": "details-property-feature-one"}
         ).find_all("li"):
-            if "planta" in characteristic.text.lower():
-                return characteristic.text
+            text = characteristic.text.lower()
+            if "planta" in text:
+                numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+                for letter in text:
+                    if letter in numbers:
+                        return int(letter)
 
         return None
 
@@ -130,7 +137,8 @@ class HouseScraping:
                     self.soup.find(
                         "div",
                         {
-                            "class": "adCommentsLanguage expandable is-expandable with-expander-button"
+                            "class": "adCommentsLanguage expandable is-expandable "
+                            "with-expander-button"
                         },
                     )
                     .find("p")
@@ -199,12 +207,10 @@ class HouseScraping:
         """
 
         try:
-            return (
-                True
-                if self.soup.find("div", {"class": "detail-info-tags"})
-                .find("span", {"class": "tag"})
-                .text
-                else False
+            return bool(
+                self.soup.find("div", {"class": "detail-info-tags"}).find(
+                    "span", {"class": "tag"}
+                )
             )
         except AttributeError:
             return False
@@ -215,12 +221,10 @@ class HouseScraping:
         """
 
         try:
-            return (
-                True
-                if self.soup.find(
+            return bool(
+                self.soup.find(
                     "button", {"class": "multimedia-shortcuts-button btn video"}
-                ).text
-                else False
+                )
             )
         except AttributeError:
             return False
@@ -230,13 +234,13 @@ class HouseScraping:
         Gets if the advertisement has a virtual tour.
         """
 
+        button_str = "multimedia-shortcuts-button btn icon-virtual-tour-outline"
         try:
-            return (
-                True
-                if self.soup.find(
-                    "button", {"class": "multimedia-shortcuts-button btn virtual-tour"}
-                ).text
-                else False
+            return bool(
+                self.soup.find(
+                    "button",
+                    {"class": button_str},
+                )
             )
         except AttributeError:
             return False
@@ -247,13 +251,21 @@ class HouseScraping:
         """
 
         try:
-            return (
-                True
-                if self.soup.find(
+            return bool(
+                self.soup.find(
                     "button", {"class": "multimedia-shortcuts-button btn three-d-tour"}
-                ).text
-                else False
+                )
             )
+        except AttributeError:
+            return False
+
+    def _get_homestaging(self) -> bool:
+        """
+        Gets if the advertisement has a homestaging.
+        """
+
+        try:
+            return bool(self.soup.find("div", {"id": "homestaging"}))
         except AttributeError:
             return False
 
@@ -263,12 +275,11 @@ class HouseScraping:
         """
 
         try:
-            return (
-                True
-                if self.soup.find(
-                    "button", {"class": "multimedia-shortcuts-button btn plan"}
-                ).text
-                else False
+            return bool(
+                self.soup.find(
+                    "button",
+                    {"class": "multimedia-shortcuts-button btn icon-pics-outline"},
+                )
             )
         except AttributeError:
             return False
@@ -322,7 +333,7 @@ class HouseScraping:
         ).find_all("li"):
             if "con ascensor" in characteristic.text.lower():
                 return True
-            elif "sin ascensor" in characteristic.text.lower():
+            if "sin ascensor" in characteristic.text.lower():
                 return False
 
         return None
@@ -337,7 +348,7 @@ class HouseScraping:
         ).find_all("li"):
             if "amueblado" in characteristic.text.lower():
                 return True
-            elif "sin amueblar" in characteristic.text.lower():
+            if "sin amueblar" in characteristic.text.lower():
                 return False
 
         return None
@@ -363,32 +374,27 @@ class HouseScraping:
         Gets the energetic consume of the house.
         """
 
-        try:
-            consume_string = str(
-                self.soup.find("div", {"class": "details-property-feature-two"})
-                .find_all("div", {"class": "details-property_features"})[1]
-                .find_all("li")[0]
-                .find_all("span")[-1]
-            )
-            return consume_string[consume_string.find("title=") + 7].upper()
-        except IndexError:
-            return None
+        for letter in ["A", "B", "C", "D", "E", "F", "G"]:
+            if self.soup.find(
+                "span",
+                {"class": f"energy-certificate-img-ticket-left left-{letter.lower()}"},
+            ):
+                return letter
+        return None
 
     def _get_emisions(self) -> str | None:
         """
         Gets the emissions of the house.
         """
 
-        try:
-            emisions_string = str(
-                self.soup.find("div", {"class": "details-property-feature-two"})
-                .find_all("div", {"class": "details-property_features"})[1]
-                .find_all("li")[1]
-                .find_all("span")[-1]
-            )
-            return emisions_string[emisions_string.find("title=") + 7].upper()
-        except IndexError:
-            return None
+        for letter in ["A", "B", "C", "D", "E", "F", "G"]:
+            emision_str = f"energy-certificate-img-ticket-right right-{letter.lower()}"
+            if self.soup.find(
+                "span",
+                {"class": emision_str},
+            ):
+                return letter
+        return None
 
     def get_house_information(self) -> dict[str, int | str | bool | None]:
         """
@@ -416,6 +422,7 @@ class HouseScraping:
             "video": self._get_video(),
             "virtual_tour": self._get_virtual_tour(),
             "3d_tour": self._get_3d_tour(),
+            "homestaging": self._get_homestaging(),
             "plane": self._get_plane(),
             "air_conditioning": self._get_air_conditioning(),
             "heating": self._get_heating(),
@@ -425,3 +432,14 @@ class HouseScraping:
             "consume": self._get_consume(),
             "emisions": self._get_emisions(),
         }
+
+    def get_html(self) -> BeautifulSoup:
+        """
+        Returns the soup.
+
+        Returns
+        -------
+        BeautifoulSoup object of the advertisement.
+        """
+
+        return self.soup

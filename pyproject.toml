@@ -1,0 +1,15 @@
+[project]
+name = "scrapping"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bs4>=0.0.2",
+    "numpy>=2.2.0",
+    "pandas>=2.2.3",
+    "pytest>=8.3.4",
+    "selenium>=4.27.1",
+    "setuptools>=75.6.0",
+    "undetected-chromedriver>=3.5.5",
+]
