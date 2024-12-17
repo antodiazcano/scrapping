@@ -100,7 +100,7 @@ def main(base_url: str, save_every: int = 5) -> None:
     try:
         browser.quit()
     except Exception as e:
-        print(f"Scraping was ok, but there was an error when closing the browser: {e}")
+        print(f"Scraping was ok, but there was an error when closing the browser: {e}.")
     _save_df(house_dfs)
 
 
